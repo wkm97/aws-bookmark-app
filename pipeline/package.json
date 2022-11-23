@@ -1,0 +1,33 @@
+{
+  "name": "pipeline",
+  "version": "0.1.0",
+  "bin": {
+    "pipeline": "bin/pipeline.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@aws-cdk/assertions": "1.181.0",
+    "@types/jest": "^27.5.0",
+    "@types/node": "10.17.27",
+    "@types/prettier": "2.6.0",
+    "aws-cdk": "1.181.0",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.4",
+    "ts-node": "^10.8.1",
+    "typescript": "~3.9.7"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-codebuild": "^1.181.0",
+    "@aws-cdk/aws-codecommit": "^1.181.0",
+    "@aws-cdk/aws-codedeploy": "^1.181.0",
+    "@aws-cdk/aws-codepipeline-actions": "^1.181.0",
+    "@aws-cdk/aws-s3": "^1.181.0",
+    "@aws-cdk/core": "1.181.0",
+    "source-map-support": "^0.5.21"
+  }
+}
