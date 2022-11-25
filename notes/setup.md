@@ -1,4 +1,6 @@
 # Setup
+> Refer to module 6-cicd for important points.
+
 1. create CodeCommit Repo using cli
 ```bash
 aws codecommit create-repository --repository-name app-code
