@@ -66,3 +66,30 @@ npm install artillery -g
 npm install faker@5.5.3
 artillery run simple-post.yaml
 ```
+
+3. Try curl a record
+```bash
+source ~/environment/aws-bookmark-app/app-code/labVariables
+echo export ID=$(aws dynamodb scan --table-name bookmarksTable --query Items[0].id --output text) >> ~/environment/aws-bookmark-app/app-code/labVariables
+source ~/environment/aws-bookmark-app/app-code/labVariables
+curl ${API_GATEWAY_URL}/bookmarks/${ID}
+
+# Recursive call
+source ~/environment/aws-bookmark-app/app-code/labVariables
+counter=1
+while [ $counter -le 120 ]
+do
+    curl ${API_GATEWAY_URL}/bookmarks/${ID}
+    sleep 1
+    ((counter++))
+    printf "\n"
+done
+```
+
+## Testing Canary Deployment 
+- Applied on getBookmark endpoint
+- have alarm attach
+- will rollback if 
+
+1. Make changes and push
+2. When Deploy stage is `In Progress` > left navigation pane, choose `CodeDeploy` > `Deployments` > choose `Deployment id`

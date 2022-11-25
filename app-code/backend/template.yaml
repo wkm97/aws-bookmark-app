@@ -43,7 +43,8 @@ Resources:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
-                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getBookmark.Arn}/invocations
+                # refer to getBookmark alias
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getBookmark.Arn}:live/invocations
               responses: {}
             put:
               x-amazon-apigateway-integration:
@@ -115,6 +116,12 @@ Resources:
           TABLE_NAME: !Ref bookmarksTable
           TABLE_ARN: !GetAtt bookmarksTable.Arn
       Role: !Ref LambdaDeploymentRole
+      # latest alias is `live` with deployment method of canary10 attached with alarm
+      AutoPublishAlias: live
+      DeploymentPreference:
+        Type: Canary10Percent5Minutes
+        Alarms:
+          - !Ref CanaryErrorsAlarm
       Events:
         apiGET:
           Type: Api
@@ -124,6 +131,25 @@ Resources:
             RestApiId: !Ref api
     Metadata:
       FinTag: getBookmark
+
+  CanaryErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Lambda function canary errors
+      ComparisonOperator: GreaterThanThreshold
+      EvaluationPeriods: 2
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Period: 60
+      Statistic: Sum
+      Threshold: 0
+      Dimensions:
+        - Name: Resource
+          Value: "getBookmark:live"
+        - Name: FunctionName
+          Value: !Ref getBookmark
+        - Name: ExecutedVersion
+          Value: !GetAtt getBookmark.Version.Version
 
   updateBookmark:
     Type: AWS::Serverless::Function
