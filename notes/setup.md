@@ -1,5 +1,10 @@
 # Setup
-1. Replace value in template.yaml
+1. create CodeCommit Repo
+```bash
+aws codecommit create-repository --repository-name app-code
+```
+
+2. Replace Parameters value in template.yaml for `LambdaDeploymentRole` and `StepFunctionsDeploymentRole`
 ```bash
 cd backend
 export LAMBDA_ROLE_ARN=$(aws iam list-roles --query "Roles[?contains(RoleName, 'LambdaDeployment')].Arn" --output text)
